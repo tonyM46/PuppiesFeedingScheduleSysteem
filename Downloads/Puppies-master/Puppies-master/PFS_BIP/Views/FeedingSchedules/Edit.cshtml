@@ -1,0 +1,81 @@
+﻿@model PFS_BIP.Models.FeedingSchedule
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>FeedingSchedule</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="PuppyId" class="control-label"></label>
+                <select asp-for="PuppyId" class="form-control" asp-items="ViewBag.PuppyId"></select>
+                <span asp-validation-for="PuppyId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="NumberOfMeals" class="control-label"></label>
+                <select id="numberOfMeals" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <span asp-validation-for="NumberOfMeals" class="text-danger"></span>
+            </div>
+
+            <div id="mealTimes">
+                @for (int i = 0; i < Model.NumberOfMeals; i++)
+                {
+                    <div class="form-group">
+                        <label>Start Time for Meal @(i + 1)</label>
+                        <input type="datetime-local" class="form-control" name="FeedingTimes[@i].StartTime" value="@Model.FeedingTimes[i].StartTime.ToString("yyyy-MM-ddTHH:mm")" />
+                    </div>
+                    <div class="form-group">
+                        <label>End Time for Meal @(i + 1)</label>
+                        <input type="datetime-local" class="form-control" name="FeedingTimes[@i].EndTime" value="@Model.FeedingTimes[i].EndTime.ToString("yyyy-MM-ddTHH:mm")" />
+                    </div>
+                }
+            </div>
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#numberOfMeals').change(function () {
+                var numberOfMeals = $(this).val();
+                var mealTimesHtml = '';
+                for (var i = 0; i < numberOfMeals; i++) {
+                    mealTimesHtml += '<div class="form-group">';
+                    mealTimesHtml += '<label>Start Time for Meal ' + (i + 1) + '</label>';
+                    mealTimesHtml += '<input type="datetime-local" class="form-control" name="FeedingTimes[' + i + '].StartTime" />';
+                    mealTimesHtml += '</div>';
+                    mealTimesHtml += '<div class="form-group">';
+                    mealTimesHtml += '<label>End Time for Meal ' + (i + 1) + '</label>';
+                    mealTimesHtml += '<input type="datetime-local" class="form-control" name="FeedingTimes[' + i + '].EndTime" />';
+                    mealTimesHtml += '</div>';
+                }
+                $('#mealTimes').html(mealTimesHtml);
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

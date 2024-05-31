@@ -1,0 +1,90 @@
+﻿@model IEnumerable<PFS_BIP.Models.FeedingSchedule>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Feeding Schedules</h1>
+<br />
+<div class="btn-group" role="group" aria-label="Basic example">
+    <a href="@Url.Action("Create")" class="btn btn-primary" role="button" style="color:#84dcc6;">Create New</a>
+</div>
+<br />
+<br />
+<h4 style="background-color:#f08080; color:azure;">Today's Schedule</h4>
+@{
+    var todayFeedingSchedules = Model.Where(fs => fs.FeedingTimes.Any() && fs.FeedingTimes.FirstOrDefault().StartTime.Date == DateTime.Today);
+}
+
+@if (todayFeedingSchedules.Any())
+{
+    @foreach (var feedingSchedule in todayFeedingSchedules)
+    {
+        <h6>Feeding Schedule for @feedingSchedule.Puppy.Name</h6>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Meal Number</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int mealNumber = 1; 
+                }
+                @foreach (var feedingTime in feedingSchedule.FeedingTimes)
+                {
+                    <tr>
+                        <td>@mealNumber</td> 
+                        <td>@feedingTime.StartTime.ToShortTimeString()</td>
+                        <td>@feedingTime.EndTime.ToShortTimeString()</td>
+                        <td>
+                            <a href="@Url.Action("Delete", new { id = feedingSchedule.Id })" style="color:#f08080;" class="btn btn-danger"><i class="fa-sharp fa-regular fa-trash-can"></i></a>
+                        </td>
+                    </tr>
+                    mealNumber++; 
+                }
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    <p style="color:red">There are no schedules found for today....</p>
+}
+
+<br />
+<h4 style="background-color:#ffac81; color:azure;">The Following Days</h4>
+@foreach (var feedingSchedule in Model.Where(fs => fs.FeedingTimes.Any() && fs.FeedingTimes.FirstOrDefault().StartTime.Date > DateTime.Today))
+{
+    <h6>Feeding Schedule for @feedingSchedule.Puppy.Name</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Meal Number</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int mealNumber = 1; 
+            }
+            @foreach (var feedingTime in feedingSchedule.FeedingTimes)
+            {
+                <tr>
+                    <td>@mealNumber</td> 
+                    <td>@feedingTime.StartTime.ToShortTimeString()</td>
+                    <td>@feedingTime.EndTime.ToShortTimeString()</td>
+                    <td>
+                        <a href="@Url.Action("Delete", new { id = feedingSchedule.Id })" style="color:#f08080;" class="btn btn-danger"><i class="fa-sharp fa-regular fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                mealNumber++; 
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,25 @@
+﻿<h4>Search for a Puppy</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ShowSearchResults" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <br />
+            <div class="form-group">
+                <label for="SearchPhrase" class="control-label"></label>
+                <input type="text" id="SearchPhrase" name="SearchPhrase" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+            <br />
+        </form>
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["Message"]
+            </div>
+        }
+    </div>
+</div>

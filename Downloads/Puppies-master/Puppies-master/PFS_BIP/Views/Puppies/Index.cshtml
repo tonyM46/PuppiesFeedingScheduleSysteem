@@ -1,0 +1,64 @@
+﻿@model IEnumerable<PFS_BIP.Models.Puppies>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>List Of Our Puppies... <i class="fas fa-paw"></i></h1>
+<br />
+<div class="btn-group" role="group" aria-label="Basic example">
+    <a href="@Url.Action("Create")" class="btn btn-primary" role="button" style="color:#84dcc6;">Create New</a>
+    <a href="@Url.Action("ShowSearchForm", "Puppies")" class="btn btn-secondary" role="button" style="color:#8093f1;"><i class="fa-solid fa-magnifying-glass"></i></a>
+</div>
+<br />
+<br />
+<div >
+    <form asp-action="Index" asp-controller="Puppies" method="get">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="groupFilter">Filter by Group:</label>
+                <select id="groupFilter" name="group" class="form-control">
+                    <option value="">All</option>
+                    <option value="s">Small</option>
+                    <option value="m">Medium</option>
+                    <option value="l">Large</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="quarantineFilter">Filter by Quarantine Status:</label>
+                <select id="quarantineFilter" name="inQuarantine" class="form-control">
+                    <option value="">All</option>
+                    <option value="true">In Quarantine</option>
+                    <option value="false">Not in Quarantine</option>
+                </select>
+            </div>
+            <div class="col-md-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-block">Apply Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm @((item.InQuarantine) ? "border-danger" : "") shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                    <p class="card-text"><strong>Age:</strong> @Html.DisplayFor(modelItem => item.Age)</p>
+                    <p class="card-text"><strong>Weight:</strong> @Html.DisplayFor(modelItem => item.Weight)</p>
+                    <p class="card-text"><strong>Chip Number:</strong> @Html.DisplayFor(modelItem => item.ChipNumber)</p>
+                    <p class="card-text"><strong>In Quarantine:</strong> @Html.DisplayFor(modelItem => item.InQuarantine)</p>
+                    <p class="card-text"><strong>Group:</strong> @Html.DisplayFor(modelItem => item.Group)</p>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary" style="color:#fdffb6;"><i class="fa-regular fa-pen-to-square"></i></a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" style="color:#ffac81;"><i class="fa-solid fa-circle-info"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary" style="color:#f08080;"><i class="fa-sharp fa-regular fa-trash-can"></i></a>
+                        <a asp-action="Feed" asp-route-id="@item.Id" class="btn btn-primary" style="color:saddlebrown;"><i class="fa-solid fa-drumstick-bite"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

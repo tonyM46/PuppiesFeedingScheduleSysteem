@@ -1,0 +1,129 @@
+﻿@model PFS_BIP.Models.FeedingSchedule
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>FeedingSchedule</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="mealForm" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PuppyId" class="control-label">Select Puppy</label>
+                <select asp-for="PuppyId" id="PuppyId" class="form-control" asp-items="ViewBag.PuppyId"></select>
+                <span asp-validation-for="PuppyId" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="NumberOfMeals" class="control-label">Number of Meals</label>
+                <select asp-for="NumberOfMeals" id="numberOfMeals" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <span asp-validation-for="NumberOfMeals" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" id="feedingTimes" name="FeedingTimes" />
+            <input type="hidden" id="InQuarantine" name="InQuarantine" />
+            <div id="mealFormsContainer"></div>
+
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+        <br />
+        <div id="quarantineWarning" class="alert alert-danger" style="display:none;">
+            This puppy is in quarantine. Please see the veterinarian before scheduling.
+        </div>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#PuppyId').change(function () {
+                var puppyId = $(this).val();
+                if (puppyId) {
+                    fetch('/Puppies/GetPuppyStatus/' + puppyId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.inQuarantine) {
+                                $('#quarantineWarning').show();
+                            } else {
+                                $('#quarantineWarning').hide();
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching puppy status:', error);
+                        });
+                } else {
+                    $('#quarantineWarning').hide();
+                }
+            });
+
+            $('#numberOfMeals').change(function () {
+                var numberOfMeals = $(this).val();
+                var mealFormHtml = '';
+                for (var i = 0; i < numberOfMeals; i++) {
+                    const currentIndex = i + 1;
+                    mealFormHtml += '<div class="meal-form">';
+                    mealFormHtml += '<label>Start Time for Meal ' + currentIndex + '</label>';
+                    mealFormHtml += '<input type="datetime-local" class="form-control" id="startTime_' + i + '" name="FeedingTimes[' + i + '].StartTime" />';
+                    mealFormHtml += '<label>End Time for Meal ' + currentIndex + '</label>';
+                    mealFormHtml += '<input type="datetime-local" class="form-control" id="endTime_' + i + '" name="FeedingTimes[' + i + '].EndTime" />';
+                    mealFormHtml += '</div>';
+                }
+                $('#mealFormsContainer').html(mealFormHtml);
+            });
+
+            $('#mealForm').submit(function (event) {
+                event.preventDefault();
+
+                const numberOfMeals = $('#numberOfMeals').val();
+                let mealTimes = [];
+                for (let i = 0; i < numberOfMeals; i++) {
+                    var startTime = $('#startTime_' + i).val();
+                    var endTime = $('#endTime_' + i).val();
+                    mealTimes.push({ StartTime: startTime, EndTime: endTime });
+                }
+
+                const formData = {
+                    PuppyId: $('#PuppyId').val(),
+                    NumberOfMeals: numberOfMeals,
+                    FeedingTimes: mealTimes
+                };
+
+                fetch('@Url.Action("Create", "FeedingSchedules")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                }).then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                }).then(data => {
+                    if (data.RedirectUrl) {
+                        window.location.href = data.RedirectUrl;
+                    } else {
+                        alert('Feeding schedule created successfully!');
+                    }
+                }).catch(error => {
+                    alert('There was an error with the fetch operation: ' + error.message);
+                });
+            });
+        });
+    </script>
+}

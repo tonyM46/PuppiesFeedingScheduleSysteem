@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFS_BIP", "PFS_BIP\PFS_BIP.csproj", "{7D2EBCBE-F4FB-402F-A41C-632E8D0A90BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D2EBCBE-F4FB-402F-A41C-632E8D0A90BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D2EBCBE-F4FB-402F-A41C-632E8D0A90BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D2EBCBE-F4FB-402F-A41C-632E8D0A90BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D2EBCBE-F4FB-402F-A41C-632E8D0A90BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE4A1635-CC73-4688-AD4E-36017A5C2024}
+	EndGlobalSection
+EndGlobal

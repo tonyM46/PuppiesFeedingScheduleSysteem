@@ -1,0 +1,69 @@
+﻿@model HistoricalFeedingViewModel
+
+<h4>Historical Feeding Schedules for Puppy: @Model.PuppyName</h4>
+
+<div>
+    <form asp-action="HistoricalFeeding" asp-controller="Puppies" method="get">
+        <input type="hidden" name="puppyId" value="@Model.PuppyId" />
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="dateFilter">Filter by Date:</label>
+                <input type="date" name="filterDate" id="dateFilter" class="form-control" />
+            </div>
+            <div class="col-md-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-block">Apply Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.HistoricalSchedules.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Number of Meals</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var schedule in Model.HistoricalSchedules)
+            {
+               
+                @for (int i = 1; i <= schedule.NumberOfMeals; i++)
+                {
+                    <tr>
+                        @if (i == 1)
+                        {
+                            <td>@schedule.StartTime.ToShortDateString()</td>
+                            <td>@schedule.StartTime.ToShortTimeString()</td>
+                            <td>@schedule.EndTime.ToShortTimeString()</td>
+                        }
+                        else if (i == schedule.NumberOfMeals)
+                        {
+                            <td>@schedule.EndTime.ToShortDateString()</td>
+                            <td>@schedule.EndTime.ToShortTimeString()</td>
+                            <td>@schedule.EndTime.ToShortTimeString()</td>
+                        }
+                        else
+                        {
+                            <td colspan="3">Meal @i: No additional details available</td>
+                        }
+                        <td>1</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No historical feeding schedules found for this puppy.</p>
+}
+
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

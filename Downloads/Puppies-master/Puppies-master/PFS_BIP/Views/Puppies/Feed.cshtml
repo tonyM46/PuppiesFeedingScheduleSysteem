@@ -1,0 +1,89 @@
+﻿@model PFS_BIP.Models.Puppies
+
+<h4>Puppy: @ViewBag.PuppyName</h4>
+<br />
+@if (ViewBag.TodaysSchedules != null && ViewBag.TodaysSchedules.Count > 0)
+{
+    <h5 style="color:orange;">Today's Feeding Schedules:</h5>
+    <ul>
+        @foreach (var feedingSchedule in ViewBag.TodaysSchedules)
+        {
+            <li>
+                Start Time: @feedingSchedule.StartTime.ToShortTimeString()
+                End Time: @feedingSchedule.EndTime.ToShortTimeString()
+                Number of meals: @feedingSchedule.NumberOfMeals
+                <button class="btn btn-primary" style="color:#84dcc6" onclick="checkFeeding('@Url.Action("CheckFeeding", "Puppies")', @feedingSchedule.Id, this)"><i class="fa-regular fa-calendar-check"></i></button>
+
+
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p style="color:red">No feeding schedules found for today.</p>
+    <a href="@Url.Action("Index", "FeedingSchedules")" class="btn btn-secondary" role="button" style="color:#8093f1;">Add new</a>
+    <br />
+    <br />
+}
+
+@if (ViewBag.FutureSchedules != null && ViewBag.FutureSchedules.Count > 0)
+{
+    <h5 style="color:orange;">Future Feeding Schedules:</h5>
+    <ul>
+        @foreach (var feedingSchedule in ViewBag.FutureSchedules)
+        {
+            <li>
+                Date: @feedingSchedule.StartTime.ToShortDateString() <br />
+                Start Time: @feedingSchedule.StartTime.ToShortTimeString() <br />
+                End Time: @feedingSchedule.EndTime.ToShortTimeString() <br />
+                Number of meals: @feedingSchedule.NumberOfMeals
+                <button class="btn btn-primary" style="color:#84dcc6" onclick="checkFeeding('@Url.Action("CheckFeeding", "Puppies")', @feedingSchedule.Id, this)"><i class="fa-regular fa-calendar-check"></i></button>
+
+
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p style="color:red">No feeding schedules found for future days.</p>
+    <a href="@Url.Action("Index", "FeedingSchedules")" class="btn btn-secondary" role="button" style="color:#8093f1;">Add new</a>
+    <br />
+    <br />
+}
+@* 
+<a href="@Url.Action("HistoricalFeeding", "Puppies", new { puppyId = ViewBag.PuppyId })" class="btn btn-primary" role="button">View Feeding History</a>
+ *@
+
+@section Scripts {
+    <script type="text/javascript">
+       function checkFeeding(url, feedingScheduleId, button) {
+    // Disable the button to prevent multiple clicks
+    button.disabled = true;
+
+    // Optionally, change the button text or appearance to indicate processing
+    button.innerText = 'Checking...';
+
+    // Call the CheckFeeding action
+    $.ajax({
+        type: 'GET',
+        url: `${url}?feedingScheduleId=${feedingScheduleId}`,
+        success: function (response) {
+            // Check if the request was successful
+            if (response.success) {
+                // Redirect to the HistoricalFeeding action with the returned puppyId
+                location.href = `${'@Url.Action("HistoricalFeeding", "Puppies")'}?puppyId=${response.puppyId}`;
+            } else {
+                // Display error message if request was not successful
+                alert(response.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            // Display error message if request failed
+            alert('Error: ' + error);
+        }
+    });
+}
+    </script>
+}

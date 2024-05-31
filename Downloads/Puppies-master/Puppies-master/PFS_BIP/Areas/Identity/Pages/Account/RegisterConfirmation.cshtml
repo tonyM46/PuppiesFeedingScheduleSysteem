@@ -1,0 +1,31 @@
+﻿@page
+@model RegisterConfirmationModel
+
+@{
+    ViewData["Title"] = "Register Confirmation";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success text-center shadow-sm" role="alert">
+                <h2 class="alert-heading">
+                    <i class="fas fa-check-circle"></i> Registration Successful!
+                </h2>
+                <hr>
+                @if (Model.DisplayConfirmAccountLink)
+                {
+                    <p>
+                        Welcome to our system! To complete your registration, please
+                        <a id="confirm-link" class="alert-link" href="@Model.EmailConfirmationUrl">click here to confirm your account</a>.
+                    </p>
+                }
+                <p class="mb-0">Thank you for joining us.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
